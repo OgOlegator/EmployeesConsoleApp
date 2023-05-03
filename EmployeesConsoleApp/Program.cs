@@ -1,4 +1,6 @@
 ﻿using EmployeesConsoleApp;
+using EmployeesConsoleApp.Controllers;
+using EmployeesConsoleApp.Data;
 using EmployeesConsoleApp.Services;
 
 namespace EmployeeConsoleApp
@@ -9,6 +11,8 @@ namespace EmployeeConsoleApp
         /// Статус работы приложения
         /// </summary>
         private static bool _appIsWork;
+        private static ApplicationContext _context;
+        public static EmployeeController _controller;
 
         /// <summary>
         /// Точка входа
@@ -16,12 +20,20 @@ namespace EmployeeConsoleApp
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            _context = new ApplicationContext();
+
+            _controller = new EmployeeController(_context);
+
             _appIsWork = true;
 
             while (_appIsWork)
             {
                 Console.WriteLine("Введите команду:");
+                Console.WriteLine("--------command--------");
+                
                 var inputCommand = Console.ReadLine();
+
+                Console.WriteLine("--------result---------");
 
                 StaticDetails.ActionName actionName;
 
@@ -32,6 +44,8 @@ namespace EmployeeConsoleApp
                 catch (Exception)
                 {
                     Console.WriteLine("Введено некорректное действие");
+                    Console.WriteLine("----------end----------");
+                    Console.WriteLine();
                     continue;
                 }
 
@@ -71,6 +85,9 @@ namespace EmployeeConsoleApp
                         Console.WriteLine("Введено некорректное действие");
                         break;
                 }
+
+                Console.WriteLine("-----------------------");
+                Console.WriteLine();
             }
         }
     }

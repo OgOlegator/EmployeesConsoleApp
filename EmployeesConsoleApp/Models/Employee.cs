@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmployeesConsoleApp.Models
 {
+    /// <summary>
+    /// Модель сотрудник
+    /// </summary>
     public class Employee
     {
 

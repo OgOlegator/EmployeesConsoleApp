@@ -11,11 +11,12 @@ namespace EmployeesConsoleApp
     /// </summary>
     public static class StaticDetails
     {
-        /// <summary>
-        /// Имя папки с файлом с данными сотрудников
-        /// </summary>
+        //Имя и путь к файлу
         public static readonly string FileFolderPath = Path.GetTempPath();
+        public const string FileName = "EmployeeData.txt";
+        public static readonly string FilePath = FileFolderPath + FileName;
 
+        //Константы с командами
         public const string ActionGetAll = "getall";
         public const string ActionGetById = "get";
         public const string ActionCreate = "add";
