@@ -40,9 +40,25 @@ namespace EmployeesConsoleApp.Data.Base
             _changedStatus = true;
         }
 
+        /// <summary>
+        /// Обновление элемента набора
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="Exception"></exception>
         public void Update(TEntity item)
         {
-            
+            var updateItem = _entityList.FirstOrDefault(entity => entity.Id == item.Id);
+
+            if (updateItem == null)
+                throw new KeyNotFoundException($"Запись с ключом {item.Id} не найдена");
+
+            _changedStatus = true;
+
+            if (_entityList.Remove(updateItem))
+                _entityList.Add(item);
+            else
+                throw new Exception("Обновление не удалось");
         }
 
         /// <summary>
@@ -76,7 +92,7 @@ namespace EmployeesConsoleApp.Data.Base
         /// </summary>
         /// <param name="jsonData"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void Fill(string jsonData)
+        public void FillFromJson(string jsonData)
         {
             if (jsonData == null)
                 throw new ArgumentNullException();
