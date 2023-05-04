@@ -11,22 +11,19 @@ namespace EmployeeConsoleApp
         /// <summary>
         /// Объект для работы с хранилищем данных
         /// </summary>
-        private static TextFileContext<Employee> _employeeContext;
+        private static TextFileContext<Employee> _employeeContext = new TextFileContext<Employee>(StaticDetails.FullFilePath);
 
         /// <summary>
         /// Контроллер для выполнения основной логики приложения
         /// </summary>
-        public static EmployeeController _controller;
+        public static EmployeeController _controller = new EmployeeController(_employeeContext);
 
         /// <summary>
         /// Точка входа
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
-        {
-            _employeeContext = new TextFileContext<Employee>(StaticDetails.FilePath);
-            _controller = new EmployeeController(_employeeContext);
-
+        { 
             while (true)
             {
                 Console.WriteLine("Введите команду:");
@@ -54,19 +51,30 @@ namespace EmployeeConsoleApp
                 {
                     case StaticDetails.ActionName.GetAll:
                         {
+                            var result = _controller.Get();
 
+                            foreach(var employee in result)
+                                Console.WriteLine(employee.ToString());
 
                             break;
                         }
                     case StaticDetails.ActionName.GetById:
                         {
+                            var id = int.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.IdParameter));
+                            var result = _controller.GetById(id);
 
+                            Console.WriteLine(result.ToString());
 
                             break;
                         }
                     case StaticDetails.ActionName.Create:
                         {
-
+                            _controller.Create(new Employee
+                            {
+                                FirstName = CommandParser.GetValueParameter(inputCommand, StaticDetails.FirstNameParameter),
+                                LastName = CommandParser.GetValueParameter(inputCommand, StaticDetails.LastNameParameter),
+                                SalaryPerHour = decimal.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.SalaryParameter)),
+                            });
 
                             break;
                         }
@@ -78,7 +86,8 @@ namespace EmployeeConsoleApp
                         }
                     case StaticDetails.ActionName.Delete:
                         {
-
+                            var id = int.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.IdParameter));
+                            _controller.Delete(id);
 
                             break;
                         }

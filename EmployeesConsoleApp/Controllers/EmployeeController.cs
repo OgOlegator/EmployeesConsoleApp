@@ -19,7 +19,7 @@ namespace EmployeesConsoleApp.Controllers
 
         public List<Employee> Get()
         {
-
+            var result = _employeeContext.d
 
             return null;
         }

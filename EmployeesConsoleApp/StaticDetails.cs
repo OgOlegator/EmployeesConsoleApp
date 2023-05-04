@@ -14,14 +14,14 @@ namespace EmployeesConsoleApp
         //Имя и путь к файлу
         public static readonly string FileFolderPath = Path.GetTempPath();
         public const string FileName = "EmployeeData.txt";
-        public static readonly string FilePath = FileFolderPath + FileName;
+        public static readonly string FullFilePath = FileFolderPath + FileName;
 
         //Константы с командами
-        public const string ActionGetAll = "getall";
-        public const string ActionGetById = "get";
-        public const string ActionCreate = "add";
-        public const string ActionUpdate = "update";
-        public const string ActionDelete = "delete";
+        public const string ActionGetAll = "-getall";
+        public const string ActionGetById = "-get";
+        public const string ActionCreate = "-add";
+        public const string ActionUpdate = "-update";
+        public const string ActionDelete = "-delete";
 
         /// <summary>
         /// Команды обрабатываемые приложением
@@ -34,5 +34,11 @@ namespace EmployeesConsoleApp
             Update,
             Delete,
         }
+
+        //Константы с именами параметров команд вводимых в консоли
+        public const string IdParameter = "Id:";
+        public const string FirstNameParameter = "FirstName:";
+        public const string LastNameParameter = "LastName:";
+        public const string SalaryParameter = "SalaryPerHour:";
     }
 }

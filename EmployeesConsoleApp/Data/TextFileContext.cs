@@ -20,7 +20,7 @@ namespace EmployeesConsoleApp.Data
         /// <summary>
         /// Объект для работы с набором данных
         /// </summary>
-        public readonly DataSet<TEntity> _dataSet;
+        public readonly DataSet<TEntity> DataSet;
 
         public TextFileContext(string pathToFile)
         {
@@ -45,7 +45,7 @@ namespace EmployeesConsoleApp.Data
         private void SetDataFromFile()
         {
             string jsonData = File.ReadAllText(_pathToFile);
-            _dataSet.FillFromJson(jsonData);
+            DataSet.FillFromJson(jsonData);
         }
 
         /// <summary>
@@ -53,11 +53,11 @@ namespace EmployeesConsoleApp.Data
         /// </summary>
         public void SaveChanges()
         {
-            string jsonData = JsonConvert.SerializeObject(_dataSet);
+            string jsonData = JsonConvert.SerializeObject(DataSet);
 
             File.WriteAllText(_pathToFile, jsonData);
 
-            _dataSet.ResetChangedStatus();
+            DataSet.ResetChangedStatus();
         }
     }
 }
