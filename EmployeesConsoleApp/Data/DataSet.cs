@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmployeesConsoleApp.Data.Base
+namespace EmployeesConsoleApp.Data
 {
     /// <summary>
     /// Реализация набора данных для работы с коллекцией данных из контекста.
@@ -18,7 +18,7 @@ namespace EmployeesConsoleApp.Data.Base
         /// <summary>
         /// Отслеживание изменений коллекции
         /// </summary>
-        private bool _changedStatus = false;
+        public bool IsChanged { get; private set; } = false;
 
         /// <summary>
         /// Коллекция данных
@@ -37,7 +37,7 @@ namespace EmployeesConsoleApp.Data.Base
 
             _entityList.Add(item);
 
-            _changedStatus = true;
+            IsChanged = true;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace EmployeesConsoleApp.Data.Base
             if (updateItem == null)
                 throw new KeyNotFoundException($"Запись с ключом {item.Id} не найдена");
 
-            _changedStatus = true;
+            IsChanged = true;
 
             if (_entityList.Remove(updateItem))
                 _entityList.Add(item);
@@ -74,7 +74,7 @@ namespace EmployeesConsoleApp.Data.Base
             if (removedItem == null)
                 throw new KeyNotFoundException($"Запись с ключом {item.Id} не найдена");
 
-            _changedStatus = true;
+            IsChanged = true;
 
             return _entityList.Remove(removedItem);
         }
@@ -84,7 +84,7 @@ namespace EmployeesConsoleApp.Data.Base
         /// </summary>
         public void ResetChangedStatus()
         {
-            _changedStatus = false;
+            IsChanged = false;
         }
 
         /// <summary>

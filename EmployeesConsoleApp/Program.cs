@@ -1,6 +1,7 @@
 ﻿using EmployeesConsoleApp;
 using EmployeesConsoleApp.Controllers;
 using EmployeesConsoleApp.Data;
+using EmployeesConsoleApp.Models;
 using EmployeesConsoleApp.Services;
 
 namespace EmployeeConsoleApp
@@ -8,10 +9,13 @@ namespace EmployeeConsoleApp
     internal class Program
     {
         /// <summary>
-        /// Статус работы приложения
+        /// Объект для работы с хранилищем данных
         /// </summary>
-        private static bool _appIsWork;
-        private static ApplicationContext _context;
+        private static TextFileContext<Employee> _employeeContext;
+
+        /// <summary>
+        /// Контроллер для выполнения основной логики приложения
+        /// </summary>
         public static EmployeeController _controller;
 
         /// <summary>
@@ -20,13 +24,10 @@ namespace EmployeeConsoleApp
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            _context = new ApplicationContext();
+            _employeeContext = new TextFileContext<Employee>(StaticDetails.FilePath);
+            _controller = new EmployeeController(_employeeContext);
 
-            _controller = new EmployeeController(_context);
-
-            _appIsWork = true;
-
-            while (_appIsWork)
+            while (true)
             {
                 Console.WriteLine("Введите команду:");
                 Console.WriteLine("--------command--------");

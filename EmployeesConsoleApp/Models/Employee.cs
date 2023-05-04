@@ -1,4 +1,4 @@
-﻿using EmployeesConsoleApp.Data.Base;
+﻿using EmployeesConsoleApp.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

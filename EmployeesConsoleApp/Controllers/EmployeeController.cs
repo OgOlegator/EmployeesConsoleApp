@@ -10,11 +10,11 @@ namespace EmployeesConsoleApp.Controllers
 {
     public class EmployeeController
     {
-        private readonly ApplicationContext _context;
+        private readonly TextFileContext<Employee> _employeeContext;
 
-        public EmployeeController(ApplicationContext context)
+        public EmployeeController(TextFileContext<Employee> employeeContext)
         {
-            _context = context;
+            _employeeContext = employeeContext;
         }
 
         public List<Employee> Get()
