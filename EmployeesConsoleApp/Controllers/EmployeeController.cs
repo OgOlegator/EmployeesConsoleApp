@@ -10,40 +10,46 @@ namespace EmployeesConsoleApp.Controllers
 {
     public class EmployeeController
     {
-        private readonly TextFileContext<Employee> _employeeContext;
+        private readonly TextFileContext<Employee> _context;
 
         public EmployeeController(TextFileContext<Employee> employeeContext)
         {
-            _employeeContext = employeeContext;
+            _context = employeeContext;
         }
 
         public List<Employee> Get()
         {
-            var result = _employeeContext.d
-
-            return null;
+            return _context.DataSet.ToList();
         }
 
         public Employee GetById(int id)
         {
-
-
-            return new Employee();
+            return _context.DataSet.FirstOrDefault(employee => employee.Id == id) ?? new Employee();
         }
 
         public void Create(Employee employee)
         {
-
+            _context.DataSet.Add(employee);
+            _context.SaveChanges();
         }
 
         public void Update(Employee employee)
         {
 
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
+            var deleteEmployee = _context.DataSet.FirstOrDefault(employee => employee.Id == id);
 
+            if (deleteEmployee == null)
+                return;
+
+            var result = _context.DataSet.Remove(deleteEmployee);
+
+            if(result)
+                _context.SaveChanges();
         }
     }
 }
