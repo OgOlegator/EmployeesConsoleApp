@@ -124,7 +124,7 @@ namespace EmployeesConsoleApp.Controllers
             var deleteEmployee = _context.DataSet.FirstOrDefault(employee => employee.Id == id);
 
             if (deleteEmployee == null)
-                return;
+                throw new Exception($"Запись с ключом {id} не найдена");
 
             try
             {
