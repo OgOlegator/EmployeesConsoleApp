@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EmployeesConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-add FirstName:John LastName:Doe Salary:100.50"
+    }
+  }
+}
