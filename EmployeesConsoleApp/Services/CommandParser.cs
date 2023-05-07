@@ -42,14 +42,13 @@ namespace EmployeesConsoleApp.Services
         }
 
         /// <summary>
-        /// Получение значений параметров команды из консоли
+        /// Получение значений параметров команды из консоли или null если параметр не найден
         /// </summary>
         /// <param name="command"></param>
         /// <param name="nameParameter"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        public static string GetValueParameter(string command, string nameParameter)
+        public static string GetValueParamOrDefault(string command, string nameParameter)
         {
             if (string.IsNullOrEmpty(command))
                 throw new ArgumentNullException();
@@ -58,7 +57,7 @@ namespace EmployeesConsoleApp.Services
             var valueParameterIdx = command.Trim().IndexOf(nameParameter);
 
             if (valueParameterIdx == -1)
-                throw new ArgumentException();
+                return null;
 
             //Начиная с valueParameterIdx разбиваем строку по пробелам и берем первую подстроку
             return command.Substring(valueParameterIdx + nameParameter.Length).Split(" ").First();

@@ -27,11 +27,17 @@ namespace EmployeeConsoleApp
             while (true)
             {
                 Console.WriteLine("Введите команду:");
-                Console.WriteLine("--------command--------");
+                Console.WriteLine("command");
                 
                 var inputCommand = Console.ReadLine();
 
-                Console.WriteLine("--------result---------");
+                if(string.IsNullOrEmpty(inputCommand))
+                {
+                    Console.WriteLine("Команда не заполнена");
+                    continue;
+                }
+
+                Console.WriteLine("result");
 
                 StaticDetails.ActionName actionName;
 
@@ -41,8 +47,8 @@ namespace EmployeeConsoleApp
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Введено некорректное действие");
-                    Console.WriteLine("----------end----------");
+                    Console.WriteLine("Введена некорректная команда");
+                    Console.WriteLine("end");
                     Console.WriteLine();
                     continue;
                 }
@@ -60,7 +66,7 @@ namespace EmployeeConsoleApp
                         }
                     case StaticDetails.ActionName.GetById:
                         {
-                            var id = int.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.IdParameter));
+                            var id = int.Parse(CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.IdParameter));
                             var result = _controller.GetById(id);
 
                             Console.WriteLine(result.ToString());
@@ -69,25 +75,68 @@ namespace EmployeeConsoleApp
                         }
                     case StaticDetails.ActionName.Create:
                         {
-                            _controller.Create(new Employee
+                            try
                             {
-                                FirstName = CommandParser.GetValueParameter(inputCommand, StaticDetails.FirstNameParameter),
-                                LastName = CommandParser.GetValueParameter(inputCommand, StaticDetails.LastNameParameter),
-                                SalaryPerHour = decimal.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.SalaryParameter)),
-                            });
+                                _controller.Create(new Employee
+                                {
+                                    FirstName = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.FirstNameParameter) ?? "",
+                                    LastName = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.LastNameParameter) ?? "",
+                                    SalaryPerHour = decimal.Parse(CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.SalaryParameter) ?? "0"),
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
 
                             break;
                         }
                     case StaticDetails.ActionName.Update:
                         {
+                            var id = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.IdParameter);
+                            var firstName = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.FirstNameParameter);
+                            var lastName = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.LastNameParameter);
+                            var salary = CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.SalaryParameter);
 
+                            if(id == null)
+                            {
+                                Console.WriteLine("Параметр id некорректно заполнен");
+                                continue;
+                            }
+
+                            var changeModel = new Employee
+                            {
+                                Id = int.Parse(id),
+                                FirstName = firstName,
+                                LastName = lastName,
+                                SalaryPerHour = decimal.Parse(salary ?? "-1"),
+                            };
+
+                            try
+                            {
+                                _controller.Update(changeModel);
+                                Console.WriteLine("Ok");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
 
                             break;
                         }
                     case StaticDetails.ActionName.Delete:
                         {
-                            var id = int.Parse(CommandParser.GetValueParameter(inputCommand, StaticDetails.IdParameter));
-                            _controller.Delete(id);
+                            var id = int.Parse(CommandParser.GetValueParamOrDefault(inputCommand, StaticDetails.IdParameter));
+
+                            try
+                            {
+                                _controller.Delete(id);
+                                Console.WriteLine("Ok");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
 
                             break;
                         }
@@ -96,7 +145,7 @@ namespace EmployeeConsoleApp
                         break;
                 }
 
-                Console.WriteLine("-----------------------");
+                Console.WriteLine("end");
                 Console.WriteLine();
             }
         }

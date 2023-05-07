@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EmployeesConsoleApp.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace EmployeesConsoleApp.Data
 {
     /// <summary>
-    /// Абстрактный класс для работы с хранилищем данных
+    /// Работа с хранилищем данных
     /// </summary>
     public class TextFileContext<TEntity> where TEntity : IDataElement
     {
@@ -18,7 +19,7 @@ namespace EmployeesConsoleApp.Data
         private string _pathToFile;
 
         /// <summary>
-        /// Объект для работы с набором данных
+        /// Набор данных
         /// </summary>
         public readonly DataSet<TEntity> DataSet;
 
@@ -51,11 +52,19 @@ namespace EmployeesConsoleApp.Data
         /// <summary>
         /// Сохранить изменения в файл
         /// </summary>
+        /// <exception cref="SaveErrorException"></exception>
         public void SaveChanges()
         {
             string jsonData = JsonConvert.SerializeObject(DataSet);
 
-            File.WriteAllText(_pathToFile, jsonData);
+            try
+            {
+                File.WriteAllText(_pathToFile, jsonData);
+            }
+            catch
+            {
+                throw new SaveErrorException();
+            }
 
             DataSet.ResetChangedStatus();
         }

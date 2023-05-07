@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EmployeesConsoleApp.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,20 +46,20 @@ namespace EmployeesConsoleApp.Data
         /// </summary>
         /// <param name="item"></param>
         /// <exception cref="KeyNotFoundException"></exception>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="UpdateErrorException"></exception>
         public void Update(TEntity item)
         {
             var updateItem = _entityList.FirstOrDefault(entity => entity.Id == item.Id);
 
             if (updateItem == null)
-                throw new KeyNotFoundException($"Запись с ключом {item.Id} не найдена");
+                throw new KeyNotFoundException();
 
             IsChanged = true;
 
             if (_entityList.Remove(updateItem))
                 _entityList.Add(item);
             else
-                throw new Exception("Обновление не удалось");
+                throw new UpdateErrorException();
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace EmployeesConsoleApp.Data
             var removedItem = _entityList.FirstOrDefault(entity => entity.Id == item.Id);
 
             if (removedItem == null)
-                throw new KeyNotFoundException($"Запись с ключом {item.Id} не найдена");
+                throw new KeyNotFoundException();
 
             IsChanged = true;
 
