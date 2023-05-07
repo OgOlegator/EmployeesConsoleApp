@@ -8,59 +8,125 @@ using System.Threading.Tasks;
 namespace EmployeesConsoleApp.Services
 {
     /// <summary>
-    /// Парсинг команды введенной в консоли
+    /// Парсинг команды введенной в консоли 
     /// </summary>
     public class CommandParser
     {
+        private readonly string[] _commandArgs;
+
+        private string _action;
+
+        private int _id;
+
+        private string _firstName;
+
+        private string _lastName;
+
+        private decimal _salary = -1;   //-1, т.к. зп не может быть отрицательной
+
+        public string Action {
+            get 
+            {
+                if (_action == null)
+                    _action = _commandArgs.First();
+
+                return _action;
+            } 
+        }
+
         /// <summary>
-        /// Получение имени действия из команды из консоли
+        /// ID
         /// </summary>
-        /// <param name="command"></param>
-        /// <returns></returns>
         /// <exception cref="EmployeeAppException"></exception>
-        public static StaticDetails.ActionName GetActionName(string command)
+        public int Id {
+            get
+            {
+                if (_id == 0)
+                {
+                    try
+                    {
+                        _id = int.Parse(GetValueParamOrDefault(StaticDetails.IdParameter));
+                    }
+                    catch
+                    {
+                        throw new EmployeeAppException($"Не передан или некорректен параметр {nameof(Id)}");
+                    }
+                }
+
+                return _id;
+            }
+        }
+
+        public string FirstName {
+            get
+            {
+                if (_firstName == null)
+                {
+                    _firstName = GetValueParamOrDefault(StaticDetails.FirstNameParameter);
+                }
+
+                return _firstName;
+            }
+        }
+
+        public string LastName {
+            get
+            {
+                if (_lastName == null)
+                {
+                    _lastName = GetValueParamOrDefault(StaticDetails.LastNameParameter);
+                }
+
+                return _lastName;
+            }
+        }
+
+        /// <summary>
+        /// ЗП
+        /// </summary>
+        /// <exception cref="EmployeeAppException"></exception>
+        public decimal Salary {
+            get
+            {
+                if (_salary == -1)
+                {
+                    var salary = GetValueParamOrDefault(StaticDetails.SalaryParameter);
+
+                    if (string.IsNullOrEmpty(salary))
+                        return _salary;
+
+                    try
+                    {
+                        _salary = decimal.Parse(salary);
+                    }
+                    catch
+                    {
+                        throw new EmployeeAppException($"Некорректный параметр - {nameof(Salary)}");
+                    }
+                }
+
+                return _salary;
+            }
+        }
+
+        public CommandParser(string[] args)
         {
-            //Удаление лишних пробелов для корректной проверки
-            var commandForCheck = command.Trim();
-
-            if(commandForCheck.StartsWith(StaticDetails.ActionGetAll))
-                return StaticDetails.ActionName.GetAll;
-            
-            else if(commandForCheck.StartsWith(StaticDetails.ActionGetById))
-                return StaticDetails.ActionName.GetById;
-            
-            else if(commandForCheck.StartsWith(StaticDetails.ActionCreate))
-                return StaticDetails.ActionName.Create;
-
-            else if(commandForCheck.StartsWith(StaticDetails.ActionDelete))
-                return StaticDetails.ActionName.Delete;
-
-            else if(commandForCheck.StartsWith(StaticDetails.ActionUpdate))
-                return StaticDetails.ActionName.Update;
-
-            else
-                throw new EmployeeAppException("Введена некорректная команда");
+            _commandArgs = args;
         }
 
         /// <summary>
         /// Получение значений параметров команды из консоли или null если параметр не найден
         /// </summary>
-        /// <param name="command"></param>
         /// <param name="nameParameter"></param>
         /// <returns></returns>
-        public static string GetValueParamOrDefault(string command, string nameParameter)
+        private string GetValueParamOrDefault(string nameParameter)
         {
-            if(command == null)
+            var argument = _commandArgs.FirstOrDefault(x => x.StartsWith(nameParameter));
+
+            if (argument == null)
                 return null;
 
-            //Получение индекса с которого начинается имя параметра в строке
-            var valueParameterIdx = command.Trim().IndexOf(nameParameter);
-
-            if (valueParameterIdx == -1)
-                return null;
-
-            //Начиная с valueParameterIdx разбиваем строку по пробелам и берем первую подстроку
-            return command.Substring(valueParameterIdx + nameParameter.Length).Split(" ").First();
+            return argument.Substring(nameParameter.Length);
         }
     }
 }

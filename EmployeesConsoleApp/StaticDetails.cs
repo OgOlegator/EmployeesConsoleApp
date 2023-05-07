@@ -22,18 +22,6 @@ namespace EmployeesConsoleApp
         public const string ActionUpdate = "-update";
         public const string ActionDelete = "-delete";
 
-        /// <summary>
-        /// Команды обрабатываемые приложением
-        /// </summary>
-        public enum ActionName
-        {
-            GetAll,
-            GetById,
-            Create,
-            Update,
-            Delete,
-        }
-
         //Константы с именами параметров команд вводимых в консоли
         public const string IdParameter = "Id:";
         public const string FirstNameParameter = "FirstName:";
