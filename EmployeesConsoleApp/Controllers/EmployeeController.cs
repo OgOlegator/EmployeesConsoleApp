@@ -1,4 +1,5 @@
 ﻿using EmployeesConsoleApp.Data;
+using EmployeesConsoleApp.Data.Exceptions;
 using EmployeesConsoleApp.Exceptions;
 using EmployeesConsoleApp.Models;
 using System;
@@ -28,9 +29,17 @@ namespace EmployeesConsoleApp.Controllers
         /// Получение информации о всех сотрудниках
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="EmployeeAppException"></exception>
         public List<Employee> Get()
         {
-            return _context.DataSet.ToList();
+            try
+            {
+                return _context.DataSet.ToList();
+            }
+            catch
+            {
+                throw new EmployeeAppException("Ошибка при получении данных");
+            }
         }
 
         /// <summary>
@@ -38,16 +47,25 @@ namespace EmployeesConsoleApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        /// <exception cref="EmployeeAppException"></exception>
         public Employee GetById(int id)
         {
-            return _context.DataSet.FirstOrDefault(employee => employee.Id == id) ?? new Employee();
+            try
+            {
+                return _context.DataSet.FirstOrDefault(employee => employee.Id == id)
+                    ?? throw new EmployeeAppException($"Запись с ключом {id} не найдена");
+            }
+            catch (ArgumentNullException)
+            {
+                throw new EmployeeAppException($"Передан некорректный параметр - id = {id}");
+            }
         }
 
         /// <summary>
         /// Добавление нового сотрудника
         /// </summary>
         /// <param name="employee"></param>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="EmployeeAppException"></exception>
         public void Create(Employee employee)
         {
             try
@@ -57,7 +75,7 @@ namespace EmployeesConsoleApp.Controllers
             }
             catch(SaveErrorException)
             {
-                throw new Exception("Сохранение не выполнено");
+                throw new EmployeeAppException("Сохранение не выполнено");
             }
         }
 
@@ -65,7 +83,7 @@ namespace EmployeesConsoleApp.Controllers
         /// Обновление информации о сотруднике
         /// </summary>
         /// <param name="employee"></param>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="EmployeeAppException"></exception>
         public void Update(Employee employee)
         {
             var changeEmployee = _context.DataSet.FirstOrDefault(x => x.Id == employee.Id);
@@ -84,15 +102,15 @@ namespace EmployeesConsoleApp.Controllers
             }
             catch (KeyNotFoundException)
             {
-                throw new Exception($"Запись с ключом {employee.Id} не найдена");
+                throw new EmployeeAppException($"Запись с ключом {employee.Id} не найдена");
             }
             catch (UpdateErrorException)
             {
-                throw new Exception("Не удалось обновить");
+                throw new EmployeeAppException("Не удалось обновить");
             }
             catch (SaveErrorException)
             {
-                throw new Exception("Сохранение не выполнено");
+                throw new EmployeeAppException("Сохранение не выполнено");
             }
         }
 
@@ -100,7 +118,7 @@ namespace EmployeesConsoleApp.Controllers
         /// Удаление информации о сотруднике
         /// </summary>
         /// <param name="id"></param>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="EmployeeAppException"></exception>
         public void Delete(int id)
         {
             var deleteEmployee = _context.DataSet.FirstOrDefault(employee => employee.Id == id);
@@ -117,11 +135,11 @@ namespace EmployeesConsoleApp.Controllers
             }
             catch(KeyNotFoundException)
             {
-                throw new Exception($"Запись с ключом {id} не найдена");
+                throw new EmployeeAppException($"Запись с ключом {id} не найдена");
             }
             catch(SaveErrorException)
             {
-                throw new Exception("Сохранение не выполнено");
+                throw new EmployeeAppException("Сохранение не выполнено");
             }
         }
     }

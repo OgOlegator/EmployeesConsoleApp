@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeesConsoleApp.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace EmployeesConsoleApp.Services
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="EmployeeAppException"></exception>
         public static StaticDetails.ActionName GetActionName(string command)
         {
             //Удаление лишних пробелов для корректной проверки
@@ -38,7 +39,7 @@ namespace EmployeesConsoleApp.Services
                 return StaticDetails.ActionName.Update;
 
             else
-                throw new ArgumentException();
+                throw new EmployeeAppException("Введена некорректная команда");
         }
 
         /// <summary>
@@ -47,11 +48,10 @@ namespace EmployeesConsoleApp.Services
         /// <param name="command"></param>
         /// <param name="nameParameter"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public static string GetValueParamOrDefault(string command, string nameParameter)
         {
-            if (string.IsNullOrEmpty(command))
-                throw new ArgumentNullException();
+            if(command == null)
+                return null;
 
             //Получение индекса с которого начинается имя параметра в строке
             var valueParameterIdx = command.Trim().IndexOf(nameParameter);

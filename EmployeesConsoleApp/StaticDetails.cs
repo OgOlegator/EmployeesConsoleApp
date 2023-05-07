@@ -12,9 +12,8 @@ namespace EmployeesConsoleApp
     public static class StaticDetails
     {
         //Имя и путь к файлу
-        public static readonly string FileFolderPath = Path.GetTempPath();
+        public static readonly string FileFolderPath = Path.GetTempPath() + "EmployeeDb\\";
         public const string FileName = "EmployeeData.txt";
-        public static readonly string FullFilePath = FileFolderPath + FileName;
 
         //Константы с командами
         public const string ActionGetAll = "-getall";
@@ -39,6 +38,6 @@ namespace EmployeesConsoleApp
         public const string IdParameter = "Id:";
         public const string FirstNameParameter = "FirstName:";
         public const string LastNameParameter = "LastName:";
-        public const string SalaryParameter = "SalaryPerHour:";
+        public const string SalaryParameter = "Salary:";
     }
 }

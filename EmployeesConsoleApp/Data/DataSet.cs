@@ -1,4 +1,4 @@
-﻿using EmployeesConsoleApp.Exceptions;
+﻿using EmployeesConsoleApp.Data.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -24,7 +24,7 @@ namespace EmployeesConsoleApp.Data
         /// <summary>
         /// Коллекция данных
         /// </summary>
-        private List<TEntity> _entityList;
+        private List<TEntity> _entityList = new List<TEntity>();
 
         /// <summary>
         /// Добавить новый элемент коллекции
@@ -34,7 +34,7 @@ namespace EmployeesConsoleApp.Data
         {
             //Устанавливаем ИД по максимальному значению ИД всего набора данных + 1.
             //Предполагается, что ИД последней записи имеет максимальный ИД. 
-            item.Id = (_entityList.LastOrDefault()?.Id ?? 0) + 1;
+            item.Id = (_entityList?.LastOrDefault()?.Id ?? 0) + 1;
 
             _entityList.Add(item);
 
@@ -54,12 +54,19 @@ namespace EmployeesConsoleApp.Data
             if (updateItem == null)
                 throw new KeyNotFoundException();
 
-            IsChanged = true;
+            try
+            {
+                if (_entityList.Remove(updateItem))
+                    _entityList.Add(item);
+                else
+                    throw new Exception();
 
-            if (_entityList.Remove(updateItem))
-                _entityList.Add(item);
-            else
+                IsChanged = true;
+            }
+            catch (Exception)
+            {
                 throw new UpdateErrorException();
+            }
         }
 
         /// <summary>
@@ -98,7 +105,10 @@ namespace EmployeesConsoleApp.Data
             if (jsonData == null)
                 throw new ArgumentNullException();
 
-            _entityList = JsonConvert.DeserializeObject<List<TEntity>>(jsonData);
+            var deserializeData = JsonConvert.DeserializeObject<List<TEntity>>(jsonData);
+
+            if(deserializeData != null)
+                _entityList = deserializeData;
         }
 
         // Реализация методов интерфейса IEnumerable

@@ -1,4 +1,4 @@
-﻿using EmployeesConsoleApp.Exceptions;
+﻿using EmployeesConsoleApp.Data.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,34 +19,92 @@ namespace EmployeesConsoleApp.Data
         private string _pathToFile;
 
         /// <summary>
+        /// Полный путь + имя файла
+        /// </summary>
+        private string _fullFilePath;
+
+        /// <summary>
         /// Набор данных
         /// </summary>
-        public readonly DataSet<TEntity> DataSet;
+        public readonly DataSet<TEntity> DataSet = new DataSet<TEntity>();
 
-        public TextFileContext(string pathToFile)
+        /// <summary>
+        /// Установка контекста
+        /// </summary>
+        /// <param name="pathToFile"></param>
+        /// <param name="fileName"></param>
+        /// <exception cref="CreateContextException"></exception>
+        /// <returns></returns>
+        public TextFileContext<TEntity> SetContext(string pathToFile, string fileName)
         {
-            SetPathToFile(pathToFile);
-            SetDataFromFile();
+            try
+            {
+                SetPathToFile(pathToFile, fileName);
+                SetDataFromFile();
+            }
+            catch (CreateContextException ex)
+            {
+                throw ex;
+            }
+
+            return this;
         }
 
         /// <summary>
         /// Установка пути до файла
         /// </summary>
         /// <param name="pathToFile"></param>
-        private void SetPathToFile(string pathToFile)
+        /// <param name="fileName"></param>
+        /// <exception cref="CreateContextException"></exception>
+        private void SetPathToFile(string pathToFile, string fileName)
         {
             _pathToFile = pathToFile;
+            _fullFilePath = pathToFile + fileName;
 
-            Directory.CreateDirectory(_pathToFile);
+            try
+            {
+                //Создаем путь к файлу, если его нет
+                Directory.CreateDirectory(_pathToFile);
+
+                //Создаем файл если его нет
+                if (!File.Exists(_fullFilePath))
+                    File.Create(_fullFilePath).Close();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new CreateContextException("Нет прав на создание/получение файла с данными. " +
+                    "Попробуйте добавить в исключение запускающую программу в антивирусе на вашем компьютере " +
+                    "или запустите программу от имени администратора.");
+            }
+            catch (ArgumentNullException)
+            {
+                throw new CreateContextException("Путь к файлу с данными = null");
+            }
+            catch (ArgumentException)
+            {
+                throw new CreateContextException("Некорректный путь к хранилищу данных");
+            }
+            catch
+            {
+                throw new CreateContextException("Ошибка при создании/получении контекста");
+            }
         }
 
         /// <summary>
         /// Чтение данных из файла
         /// </summary>
+        /// <exception cref="CreateContextException"></exception>
         private void SetDataFromFile()
         {
-            string jsonData = File.ReadAllText(_pathToFile);
-            DataSet.FillFromJson(jsonData);
+            try
+            {
+                var jsonData = File.ReadAllText(_fullFilePath);
+                DataSet.FillFromJson(jsonData);
+            }
+            catch (ArgumentNullException)
+            {
+                throw new CreateContextException("Не удалось получить данные из файла");
+            }
         }
 
         /// <summary>
@@ -55,11 +113,11 @@ namespace EmployeesConsoleApp.Data
         /// <exception cref="SaveErrorException"></exception>
         public void SaveChanges()
         {
-            string jsonData = JsonConvert.SerializeObject(DataSet);
+            var jsonData = JsonConvert.SerializeObject(DataSet);
 
             try
             {
-                File.WriteAllText(_pathToFile, jsonData);
+                File.WriteAllText(_fullFilePath, jsonData);
             }
             catch
             {
