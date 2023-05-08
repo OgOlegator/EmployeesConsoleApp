@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmployeesConsoleApp.Exceptions
+﻿namespace EmployeesConsoleApp.Exceptions
 {
     /// <summary>
     /// Общий класс исключений консольного приложения. Чтобы разделить исключения, которые предпологались при работе приложения и информация
