@@ -24,6 +24,10 @@ namespace EmployeesConsoleApp.Services
 
         private decimal _salary = -1;   //-1, т.к. зп не может быть отрицательной
 
+        /// <summary>
+        /// Действие из консоли. Берется первый элемент массива args, т.к. ожидается, что команда пишется в начале, как вариант,
+        /// мог искать команду по символу "-"
+        /// </summary>
         public string Action {
             get 
             {
