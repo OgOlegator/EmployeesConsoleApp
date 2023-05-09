@@ -21,5 +21,16 @@ namespace EmployeesConsoleApp.Models
         /// <returns></returns>
         public override string ToString()
             => $"Id = {Id}, FirstName = {FirstName}, LastName = {LastName}, SalaryPerHour = {SalaryPerHour}";
+
+        /// <summary>
+        /// Перекрытие метода Equals. Реализовано сравнение по значению. Используется в юнит-тестах
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool Equals(Employee obj)
+            => Id == obj.Id
+            && FirstName == obj.FirstName
+            && LastName == obj.LastName
+            && SalaryPerHour == obj.SalaryPerHour;
     }
 }
