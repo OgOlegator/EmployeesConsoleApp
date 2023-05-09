@@ -14,7 +14,7 @@ namespace EmployeesConsoleApp.Tests
     public class EmployeesControllerTests
     {
         [Fact]
-        public void AddEmployeeAndSaveInContext()
+        public void AddEmployeeAndSaveInContext_CallMethods_IsCalled()
         {
             var mockSet = new Mock<DataSet<Employee>>();
 
@@ -29,7 +29,7 @@ namespace EmployeesConsoleApp.Tests
         }
 
         [Fact]
-        public void GetMethodsReturnTrueResults()
+        public void GetAll_GetById_TrueResults()
         {
             var testData = GetTestEmployees();
 

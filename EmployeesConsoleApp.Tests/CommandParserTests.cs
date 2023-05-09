@@ -7,7 +7,7 @@ namespace EmployeesConsoleApp.Tests
     {
         [Theory]
         [InlineData("-add FirstName:John LastName:Doe Salary:100", "-add", "John", "Doe", 100)]
-        public void ReturnCorrectParameters(string command, string action, string firstName, string lastName, decimal salary)
+        public void IfCorrectParameters_ReturnOk(string command, string action, string firstName, string lastName, decimal salary)
         {
             var parser = new CommandParser(command.Split(' '));
 
@@ -19,7 +19,7 @@ namespace EmployeesConsoleApp.Tests
 
         [Theory]
         [InlineData("-add FirstName:")]
-        public void ReturnEmptyStringIfEmptyParam(string command)
+        public void IfEmptyParam_ReturnEmptyString(string command)
         {
             var parser = new CommandParser(command.Split(' '));
             Assert.Equal(parser.FirstName, string.Empty);
@@ -28,7 +28,7 @@ namespace EmployeesConsoleApp.Tests
         [Theory]
         [InlineData("-get Id:100rrr")]
         //[InlineData("-update Id:1 Salary:100rrr")]
-        public void ReturnExceptionIfIdNotNumericValue(string command)
+        public void IfIdNotNumericValue_ReturnException(string command)
         {
             var parser = new CommandParser(command.Split(' '));
 
@@ -46,7 +46,7 @@ namespace EmployeesConsoleApp.Tests
 
         [Theory]
         [InlineData("-update Id:1 Salary:100rrr")]
-        public void ReturnExceptionIfSalaryNotNumericValue(string command)
+        public void IfSalaryNotNumericValue_ReturnException(string command)
         {
             var parser = new CommandParser(command.Split(' '));
 
