@@ -21,7 +21,7 @@ namespace EmployeesConsoleApp.Data
         /// <summary>
         /// Набор данных
         /// </summary>
-        public readonly DataSet<TEntity> DataSet = new DataSet<TEntity>();
+        public DataSet<TEntity> DataSet { get; set; } = new DataSet<TEntity>();
 
         /// <summary>
         /// Установка контекста
