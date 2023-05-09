@@ -31,7 +31,9 @@ namespace EmployeesConsoleApp.Tests
         [Fact]
         public void GetMethodsReturnTrueResults()
         {
-            var employeeData = GetTestEmployees();
+            var testData = GetTestEmployees();
+
+            var employeeData = testData;
 
             var mockSet = new Mock<DataSet<Employee>>();
             mockSet.As<IQueryable<Employee>>().Setup(dataSet => dataSet.GetEnumerator()).Returns(() => employeeData.GetEnumerator());
@@ -41,11 +43,17 @@ namespace EmployeesConsoleApp.Tests
 
             var controller = new EmployeeController(mockContext.Object);
 
-            var resultGet = controller.Get().All(x => GetTestEmployees().Any(y => y.Equals(x)));
-            var resultGetById = controller.GetById(2).Equals(GetTestEmployees().FirstOrDefault(x => x.Id == 2));
+            var resultGetById = controller.GetById(2).Equals(testData.FirstOrDefault(x => x.Id == 2));
 
-            Assert.True(resultGet);
             Assert.True(resultGetById);
+
+            var resultGet = controller.Get();
+
+            Assert.True(resultGet[0].Equals(testData[0]));
+            Assert.True(resultGet[1].Equals(testData[1]));
+            Assert.True(resultGet[2].Equals(testData[2]));
+            Assert.True(resultGet[3].Equals(testData[3]));
+            Assert.True(resultGet[4].Equals(testData[4]));
         }
 
 
