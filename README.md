@@ -37,3 +37,12 @@
 
 Фреймворк юнит-тестирования:
 - xUnit 
+
+Используемые библиотеки для юнит-тестирования:
+- Moq
+- Newtonsoft.Json
+
+![image](https://github.com/OgOlegator/EmployeesConsoleApp/assets/92753056/c6720867-7d6b-40b4-b6da-8d477e1acf6d)
+
+
+
