@@ -66,7 +66,7 @@ namespace EmployeesConsoleApp.Data
         /// </summary>
         /// <param name="jsonData"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public virtual void FillFromJson(string jsonData)
+        public void FillFromJson(string jsonData)
         {
             if (jsonData == null)
                 throw new ArgumentNullException();

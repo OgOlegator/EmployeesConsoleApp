@@ -1,6 +1,7 @@
 ﻿using EmployeesConsoleApp.Controllers;
 using EmployeesConsoleApp.Data;
 using EmployeesConsoleApp.Models;
+using EmployeesConsoleApp.Exceptions;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace EmployeesConsoleApp.Tests
     public class EmployeesControllerTests
     {
         [Fact]
-        public void AddEmployeeAndSave_CallCreate_ResultOkAndIsCalled()
+        public void AddAndSave_CallCreate_ResultOkAndIsCalled()
         {
             var testData = new Employee { FirstName = "1", LastName = "1", SalaryPerHour = 100 };
 
@@ -32,7 +33,7 @@ namespace EmployeesConsoleApp.Tests
         }
 
         [Fact]
-        public void RemoveEmployeeAndSave_CallDelete_ResultOkAndIsCalled()
+        public void RemoveAndSave_CallDelete_ResultOkAndIsCalled()
         {
             var mockSet = new Mock<DataSet<Employee>>();
             mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
@@ -47,6 +48,50 @@ namespace EmployeesConsoleApp.Tests
 
             mockSet.Verify(m => m.Remove(It.IsAny<Employee>()), Times.Once());
             mockContext.Verify(m => m.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void Remove_RemoveEmployeeNotExists_ThrowException()
+        {
+            var mockSet = new Mock<DataSet<Employee>>();
+            mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
+
+            var mockContext = new Mock<TextFileContext<Employee>>();
+            mockContext.Object.DataSet = mockSet.Object;
+
+            var controller = new EmployeeController(mockContext.Object);
+
+            Assert.Throws<EmployeeAppException>(() => controller.Delete(1));
+        }
+
+        [Fact]
+        public void Update_UpdateEmployeeNotExists_ThrowException()
+        {
+            var testData = new Employee { Id = 1, FirstName = "1", LastName = "1", SalaryPerHour = 100 };
+
+            var mockSet = new Mock<DataSet<Employee>>();
+            mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
+
+            var mockContext = new Mock<TextFileContext<Employee>>();
+            mockContext.Object.DataSet = mockSet.Object;
+
+            var controller = new EmployeeController(mockContext.Object);
+
+            Assert.Throws<EmployeeAppException>(() => controller.Update(testData));
+        }
+
+        [Fact]
+        public void GetById_GetEmployeeNotExists_ThrowException()
+        {
+            var mockSet = new Mock<DataSet<Employee>>();
+            mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
+
+            var mockContext = new Mock<TextFileContext<Employee>>();
+            mockContext.Object.DataSet = mockSet.Object;
+
+            var controller = new EmployeeController(mockContext.Object);
+
+            Assert.Throws<EmployeeAppException>(() => controller.GetById(1));
         }
 
         [Fact]

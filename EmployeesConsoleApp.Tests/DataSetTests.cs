@@ -29,9 +29,15 @@ namespace EmployeesConsoleApp.Tests
             Assert.True(dataSet.First().Equals(testData));
             Assert.True(dataSet.IsChanged);
 
-            dataSet.Remove(testData);
+            var result = dataSet.Remove(testData);
 
+            Assert.True(result);
             Assert.True(dataSet.FirstOrDefault(x => x.Id == 1) == null);
+            Assert.Equal(dataSet.Count(), 0);
+
+            result = dataSet.Remove(testData);
+
+            Assert.False(result);
             Assert.Equal(dataSet.Count(), 0);
         }
 
