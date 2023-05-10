@@ -46,7 +46,7 @@ namespace EmployeesConsoleApp.Data
         }
 
         /// <summary>
-        /// Установка пути до файла
+        /// Установка пути до файла и файла 
         /// </summary>
         /// <param name="pathToFile"></param>
         /// <param name="fileName"></param>

@@ -61,6 +61,9 @@ namespace EmployeesConsoleApp.Services
             }
         }
 
+        /// <summary>
+        /// Имя
+        /// </summary>
         public string FirstName {
             get
             {
@@ -73,6 +76,9 @@ namespace EmployeesConsoleApp.Services
             }
         }
 
+        /// <summary>
+        /// Фамилия
+        /// </summary>
         public string LastName {
             get
             {
