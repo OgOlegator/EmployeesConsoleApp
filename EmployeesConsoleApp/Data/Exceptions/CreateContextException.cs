@@ -3,7 +3,7 @@
     /// <summary>
     /// Обработчик ошибок при создании контекста
     /// </summary>
-    internal class CreateContextException : Exception
+    public class CreateContextException : Exception
     {
         public CreateContextException(string? message) : base(message)
         {

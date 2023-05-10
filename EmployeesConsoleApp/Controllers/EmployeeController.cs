@@ -70,7 +70,7 @@ namespace EmployeesConsoleApp.Controllers
             var changeEmployee = _context.DataSet.FirstOrDefault(x => x.Id == employee.Id);
 
             if (changeEmployee == null)
-                throw new Exception($"Запись с ключом {employee.Id} не найдена");
+                throw new EmployeeAppException($"Запись с ключом {employee.Id} не найдена");
 
             changeEmployee.FirstName = employee.FirstName != null ? employee.FirstName : changeEmployee.FirstName;
             changeEmployee.LastName = employee.LastName != null ? employee.LastName : changeEmployee.LastName;
