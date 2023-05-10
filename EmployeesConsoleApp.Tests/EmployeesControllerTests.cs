@@ -33,10 +33,13 @@ namespace EmployeesConsoleApp.Tests
         }
 
         [Fact]
-        public void RemoveAndSave_CallDelete_ResultOkAndIsCalled()
+        public void Remove_CallDeleteAndSave_ResultOkAndIsCalled()
         {
+            var testData = GetTestEmployees();
+
             var mockSet = new Mock<DataSet<Employee>>();
             mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
+            mockSet.As<IQueryable<Employee>>().Setup(dataSet => dataSet.GetEnumerator()).Returns(() => testData.GetEnumerator());
 
             var mockContext = new Mock<TextFileContext<Employee>>();
             mockContext.Object.DataSet = mockSet.Object;
@@ -62,6 +65,26 @@ namespace EmployeesConsoleApp.Tests
             var controller = new EmployeeController(mockContext.Object);
 
             Assert.Throws<EmployeeAppException>(() => controller.Delete(1));
+        }
+
+        [Fact]
+        public void Update_UpdateAndCallSave_ResultOkAndIsCalled()
+        {
+            var testUpdateEmployee = new Employee { Id = 1, FirstName = "111", LastName = "111", SalaryPerHour = 111 };
+            var testData = GetTestEmployees();
+
+            var mockSet = new Mock<DataSet<Employee>>();
+            mockSet.As<IQueryable<Employee>>().Setup(dataSet => dataSet.GetEnumerator()).Returns(() => testData.GetEnumerator());
+
+            var mockContext = new Mock<TextFileContext<Employee>>();
+            mockContext.Object.DataSet = mockSet.Object;
+            mockContext.Setup(x => x.SaveChanges()).Verifiable();
+
+            var controller = new EmployeeController(mockContext.Object);
+
+            controller.Update(testUpdateEmployee);
+
+            mockContext.Verify(m => m.SaveChanges(), Times.Once());
         }
 
         [Fact]

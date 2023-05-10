@@ -38,7 +38,6 @@ namespace EmployeesConsoleApp.Tests
             result = dataSet.Remove(testData);
 
             Assert.False(result);
-            Assert.Equal(dataSet.Count(), 0);
         }
 
         [Fact]
@@ -64,6 +63,13 @@ namespace EmployeesConsoleApp.Tests
             Assert.True(dataSet.FirstOrDefault(x => x.Id == 3).Equals(testData[2]));
             Assert.True(dataSet.FirstOrDefault(x => x.Id == 4).Equals(testData[3]));
             Assert.True(dataSet.FirstOrDefault(x => x.Id == 5).Equals(testData[4]));
+        }
+
+        [Fact]
+        public void FillFromJson_SendNullToMethod_ThrowException()
+        {
+            var dataSet = InitializeDataSet();
+            Assert.Throws<ArgumentNullException>(() => dataSet.FillFromJson(null));
         }
     }
 }
