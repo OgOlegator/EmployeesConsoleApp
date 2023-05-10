@@ -1,3 +1,4 @@
+using EmployeesConsoleApp.Exceptions;
 using EmployeesConsoleApp.Services;
 using System;
 
@@ -32,13 +33,13 @@ namespace EmployeesConsoleApp.Tests
         {
             var parser = new CommandParser(command.Split(' '));
 
-            //Предпологается, что при некорректном значении из свойства будет выброшен exception
+            //Предпологается, что при некорректном значении из свойства будет выброшен EmployeeAppException
             try
             {
                 var result = parser.Id;
                 Assert.True(false);
             }
-            catch
+            catch(EmployeeAppException)
             {
                 Assert.True(true);
             }
@@ -50,13 +51,13 @@ namespace EmployeesConsoleApp.Tests
         {
             var parser = new CommandParser(command.Split(' '));
 
-            //Предпологается, что при некорректном значении из свойства будет выброшен exception
+            //Предпологается, что при некорректном значении из свойства будет выброшен EmployeeAppException
             try
             {
                 var result = parser.Salary;
                 Assert.True(false);
             }
-            catch
+            catch(EmployeeAppException)
             {
                 Assert.True(true);
             }
