@@ -24,9 +24,15 @@ namespace EmployeesConsoleApp.Controllers
         /// Получение информации о всех сотрудниках
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="EmployeeAppException"></exception>
         public List<Employee> Get()
         {
-            return _context.DataSet.ToList();
+            var result = _context.DataSet.ToList();
+
+            if (result.Count() == 0)
+                throw new EmployeeAppException("Файл пуст");
+
+            return result;
         }
 
         /// <summary>
