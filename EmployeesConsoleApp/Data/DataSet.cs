@@ -25,7 +25,7 @@ namespace EmployeesConsoleApp.Data
         /// Добавить новый элемент коллекции
         /// </summary>
         /// <param name="item"></param>
-        public void Add(TEntity item)
+        public virtual void Add(TEntity item)
         {
             //Устанавливаем ИД по максимальному значению ИД всего набора данных + 1.
             //Предполагается, что ИД последней записи имеет максимальный ИД. 
@@ -37,45 +37,16 @@ namespace EmployeesConsoleApp.Data
         }
 
         /// <summary>
-        /// Обновление элемента набора
-        /// </summary>
-        /// <param name="item"></param>
-        /// <exception cref="KeyNotFoundException"></exception>
-        /// <exception cref="UpdateErrorException"></exception>
-        public void Update(TEntity item)
-        {
-            var updateItem = _entityList.FirstOrDefault(entity => entity.Id == item.Id);
-
-            if (updateItem == null)
-                throw new KeyNotFoundException();
-
-            try
-            {
-                if (_entityList.Remove(updateItem))
-                    _entityList.Add(item);
-                else
-                    throw new Exception();
-
-                IsChanged = true;
-            }
-            catch (Exception)
-            {
-                throw new UpdateErrorException();
-            }
-        }
-
-        /// <summary>
         /// Удаление элемента набора
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        /// <exception cref="KeyNotFoundException"></exception>
-        public bool Remove(TEntity item)
+        public virtual bool Remove(TEntity item)
         {
             var removedItem = _entityList.FirstOrDefault(entity => entity.Id == item.Id);
 
             if (removedItem == null)
-                throw new KeyNotFoundException();
+                return false;
 
             IsChanged = true;
 
@@ -95,7 +66,7 @@ namespace EmployeesConsoleApp.Data
         /// </summary>
         /// <param name="jsonData"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public void FillFromJson(string jsonData)
+        public virtual void FillFromJson(string jsonData)
         {
             if (jsonData == null)
                 throw new ArgumentNullException();

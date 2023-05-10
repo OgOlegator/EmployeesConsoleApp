@@ -106,7 +106,7 @@ namespace EmployeesConsoleApp.Data
         /// Сохранить изменения в файл
         /// </summary>
         /// <exception cref="SaveErrorException"></exception>
-        public void SaveChanges()
+        public virtual void SaveChanges()
         {
             var jsonData = JsonConvert.SerializeObject(DataSet);
 
