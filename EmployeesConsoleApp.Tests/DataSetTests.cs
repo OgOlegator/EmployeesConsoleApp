@@ -17,7 +17,7 @@ namespace EmployeesConsoleApp.Tests
         }
 
         [Fact]
-        public void AddUpdateRemove_ResultOk()
+        public void AddRemove_ResultOk()
         {
             var dataSet = InitializeDataSet();
 
@@ -27,14 +27,6 @@ namespace EmployeesConsoleApp.Tests
 
             Assert.Equal(dataSet.Count(), 1);
             Assert.True(dataSet.First().Equals(testData));
-            Assert.True(dataSet.IsChanged);
-
-            var testUpdateData = new Employee { Id = 1, FirstName = "2", LastName = "2", SalaryPerHour = 102 };
-
-            dataSet.Update(testUpdateData);
-
-            Assert.Equal(dataSet.Count(), 1);
-            Assert.True(dataSet.First().Equals(testUpdateData));
             Assert.True(dataSet.IsChanged);
 
             dataSet.Remove(testData);

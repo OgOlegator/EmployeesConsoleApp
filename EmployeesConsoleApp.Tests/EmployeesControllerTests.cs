@@ -14,17 +14,38 @@ namespace EmployeesConsoleApp.Tests
     public class EmployeesControllerTests
     {
         [Fact]
-        public void AddEmployeeAndSaveInContext_CallMethods_IsCalled()
+        public void AddEmployeeAndSave_CallCreate_ResultOkAndIsCalled()
         {
+            var testData = new Employee { FirstName = "1", LastName = "1", SalaryPerHour = 100 };
+
             var mockSet = new Mock<DataSet<Employee>>();
 
             var mockContext = new Mock<TextFileContext<Employee>>();
             mockContext.Object.DataSet = mockSet.Object;
+            mockContext.Setup(x => x.SaveChanges()).Verifiable();
 
             var controller = new EmployeeController(mockContext.Object);
-            controller.Create(new Employee { FirstName = "1", LastName = "1", SalaryPerHour = 100 });
+            controller.Create(testData);
 
             mockSet.Verify(m => m.Add(It.IsAny<Employee>()), Times.Once());
+            mockContext.Verify(m => m.SaveChanges(), Times.Once());
+        }
+
+        [Fact]
+        public void RemoveEmployeeAndSave_CallDelete_ResultOkAndIsCalled()
+        {
+            var mockSet = new Mock<DataSet<Employee>>();
+            mockSet.Setup(x => x.Remove(It.IsAny<Employee>())).Returns(true).Verifiable();
+
+            var mockContext = new Mock<TextFileContext<Employee>>();
+            mockContext.Object.DataSet = mockSet.Object;
+            mockContext.Setup(x => x.SaveChanges()).Verifiable();
+
+            var controller = new EmployeeController(mockContext.Object);
+            
+            controller.Delete(1);
+
+            mockSet.Verify(m => m.Remove(It.IsAny<Employee>()), Times.Once());
             mockContext.Verify(m => m.SaveChanges(), Times.Once());
         }
 
@@ -33,10 +54,8 @@ namespace EmployeesConsoleApp.Tests
         {
             var testData = GetTestEmployees();
 
-            var employeeData = testData;
-
             var mockSet = new Mock<DataSet<Employee>>();
-            mockSet.As<IQueryable<Employee>>().Setup(dataSet => dataSet.GetEnumerator()).Returns(() => employeeData.GetEnumerator());
+            mockSet.As<IQueryable<Employee>>().Setup(dataSet => dataSet.GetEnumerator()).Returns(() => testData.GetEnumerator());
 
             var mockContext = new Mock<TextFileContext<Employee>>();
             mockContext.Object.DataSet = mockSet.Object;

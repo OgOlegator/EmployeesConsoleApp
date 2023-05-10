@@ -24,17 +24,9 @@ namespace EmployeesConsoleApp.Controllers
         /// Получение информации о всех сотрудниках
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="EmployeeAppException"></exception>
         public List<Employee> Get()
         {
-            try
-            {
-                return _context.DataSet.ToList();
-            }
-            catch
-            {
-                throw new EmployeeAppException("Ошибка при получении данных");
-            }
+            return _context.DataSet.ToList();
         }
 
         /// <summary>
@@ -45,15 +37,8 @@ namespace EmployeesConsoleApp.Controllers
         /// <exception cref="EmployeeAppException"></exception>
         public Employee GetById(int id)
         {
-            try
-            {
-                return _context.DataSet.FirstOrDefault(employee => employee.Id == id)
-                    ?? throw new EmployeeAppException($"Запись с ключом {id} не найдена");
-            }
-            catch (ArgumentNullException)
-            {
-                throw new EmployeeAppException($"Передан некорректный параметр - id = {id}");
-            }
+            return _context.DataSet.FirstOrDefault(employee => employee.Id == id)
+                ?? throw new EmployeeAppException($"Запись с ключом {id} не найдена");
         }
 
         /// <summary>
@@ -63,9 +48,10 @@ namespace EmployeesConsoleApp.Controllers
         /// <exception cref="EmployeeAppException"></exception>
         public void Create(Employee employee)
         {
+            _context.DataSet.Add(employee);
+
             try
             {
-                _context.DataSet.Add(employee);
                 _context.SaveChanges();
             }
             catch(SaveErrorException)
@@ -92,16 +78,7 @@ namespace EmployeesConsoleApp.Controllers
 
             try
             {
-                _context.DataSet.Update(changeEmployee);
                 _context.SaveChanges();
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new EmployeeAppException($"Запись с ключом {employee.Id} не найдена");
-            }
-            catch (UpdateErrorException)
-            {
-                throw new EmployeeAppException("Не удалось обновить");
             }
             catch (SaveErrorException)
             {
@@ -119,18 +96,16 @@ namespace EmployeesConsoleApp.Controllers
             var deleteEmployee = _context.DataSet.FirstOrDefault(employee => employee.Id == id);
 
             if (deleteEmployee == null)
-                throw new Exception($"Запись с ключом {id} не найдена");
+                throw new EmployeeAppException($"Запись с ключом {id} не найдена");
+
+            var result = _context.DataSet.Remove(deleteEmployee);
+
+            if (!result)
+                throw new EmployeeAppException("Удаление не выполнено");
 
             try
             {
-                var result = _context.DataSet.Remove(deleteEmployee);
-
-                if (result)
-                    _context.SaveChanges();
-            }
-            catch(KeyNotFoundException)
-            {
-                throw new EmployeeAppException($"Запись с ключом {id} не найдена");
+                _context.SaveChanges();
             }
             catch(SaveErrorException)
             {
