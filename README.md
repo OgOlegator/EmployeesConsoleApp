@@ -46,7 +46,7 @@
 По умолчанию для хранилища данных используется папка Temp, в ней создается (если нет, то автоматически) папка EmployeeDb и в ней уже файл EmployeeData.txt.
 
 Архитектура приложения:
-![image](https://github.com/OgOlegator/EmployeesConsoleApp/assets/92753056/d2fd4fbb-f355-4f4a-8940-2b701816fd46)
+![image](https://github.com/OgOlegator/EmployeesConsoleApp/assets/92753056/fc08a534-c52e-43f8-9cbc-a66c08526ca6)
 
 Точкой входа в приложения является класс Program.cs. 
 В нем иницилизируется контроллер (EmployeeController.cs) и контекст (TextFileContext.cs).
